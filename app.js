@@ -12,7 +12,7 @@ app.use(express.static(__dirname + '/'));
 // You will need your Account Sid and a SigningKey Sid and Secret
 // to generate an Access Token for your SDK endpoint to connect to Twilio.
 // Got to https://www.twilio.com/user/account/video/signing-keys to get signing key info
-var accountSid = 'ACe9f365f2338e22f94bc8be5dc0cc7051';
+var accountSid = 'xxx-your-account-id-here-xxx';
 var signingKeySid = 'xxx-your-signing-key-here';
 var signingKeySecret = 'xxx-your-signing-secret-here';
 //Send to twilio to get token
