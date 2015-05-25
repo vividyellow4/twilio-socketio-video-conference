@@ -1,4 +1,4 @@
-# twiliosocketiovideo
+# twilio socketio node.js video conference
 Project integrating Twilio Video using Socket.io and Node.js
 
 The code is a modification fo the twilio video quickstart example. We are using socket.io to communicate the AccessToken from the server to the browser which should allow for device independence.
