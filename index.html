@@ -1,0 +1,108 @@
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <title>Twilio-SocketIO-NodeJS Video Conference</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+            <script src="//code.jquery.com/jquery-latest.min.js"></script>
+            <script src="//cdn.socket.io/socket.io-1.2.0.js"></script>
+
+            <script>
+                var socket = io.connect();
+
+
+            </script>
+            <style>
+                #local-media video {width: 200px;  }
+                #remote-media video { width: 400px; }
+            </style>
+        </head>
+        <body>
+
+            <div class="app_wrapper">
+                <div id="head_wrapper">
+                    <!--your logo here -->
+                    <h1>Twilio-SocketIO-NodeJS Video Conference</h1>
+                </div>
+                <div id="body_wrapper">
+                    <h2>Register User</h2>
+                    1. Enter a username that others can use to video conference with you.<br />
+                    <input type="text" id="user" value="" placeholder="USERNAME">
+                    <input type="button" id="get_id"  value="GET ID"  />
+                    <br />
+                    2. Wait for the following to say waiting on incoming connections <br />
+                    <div id="log">
+                        <p>Status: &gt;&nbsp;<span id="log-content">Preparing to listen</span>...</p>
+                    </div>
+                    3. Click to preview camera<br />
+                    <button id="button-preview">Preview My Camera</button>
+
+
+                    <div id="videocontainer" >
+                        <div id="local-media">
+                            <button id="cancel-preview" style="display:none">End Video</button>
+                        </div>
+
+                        <div id="remote-media">&nbsp;</div>
+                    </div>
+
+                </div>
+                <div id="invite-controls">
+                    <p class="instructions">4. Invite another person connected to this page. You must have the name they used to register with.</p>
+                    <input id="invite-to" type="text" placeholder="Address to send an invite to" />
+                    <button id="button-invite">Send Invite</button>
+                </div>
+
+
+            </div>
+
+
+            <script src="https://media.twiliocdn.com/sdk/rtc/js/v0.8/twilio-rtc-conversations.min.js"></script>
+            <script src="twilioclient.js"></script>
+
+            <script> 
+
+                /*register user as endpoint with twilio*/   
+                $( "#get_id" ).on( "click", function() {
+                    var usr=$('#user').val();
+
+                    socket.emit('register',usr,function(data){
+                        if(data){
+                            console.log(data);
+
+                        }else{
+                            console.log('no data');  
+                        }
+                    })
+                });
+                /*receive token back and inititialize twilio register your endpoint conversation*/
+                socket.on('twiliortctoken',function(data){   
+                    console.log('authtoken:'+data);
+                    twiliomedialocal.getTwilioRTC(data);
+
+                });
+
+                //  local video preview
+                document.getElementById('button-preview').onclick = function () {
+                    twiliomedialocal.getLocalMedia();
+                    $('#cancel-preview').show();
+
+                };
+
+                document.getElementById('cancel-preview').onclick = function (mediaStream) {
+                    twiliomedialocal.cancelLocalMedia();
+                    $('#cancel-preview').hide();
+                };
+
+                document.getElementById('button-invite').onclick = function () {
+                    var inviteTo = document.getElementById('invite-to').value;
+                    twiliomedialocal.inviteSomeone(inviteTo);
+
+                }
+               
+               
+
+            </script>
+
+        </body>
+    </html>
